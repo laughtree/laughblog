@@ -11,5 +11,4 @@
 - 學習編寫後端
 - 學習使用vue框架
 - 完成一個大致完整的個人網站
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+
