@@ -2,5 +2,14 @@
 
 ## 緣起
 上學期學會了基礎的網頁製作，這學期決定來寫一個個人網站。
+
+## 目標
+- 練習設計網頁
+- 練習HTML
+- 學習JavaScript
+- ~~學習SQL~~ (暫時算了)
+- 學習編寫後端
+- 學習使用vue框架
+- 完成一個大致完整的個人網站
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
