@@ -1,24 +1,6 @@
 # laughblog
 
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
+## 緣起
+上學期學會了基礎的網頁製作，這學期決定來寫一個個人網站。
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
