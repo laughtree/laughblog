@@ -2,9 +2,10 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Nopage from '@/views/NopageView.vue'
 import Home from '@/views/HomeView.vue'
 import Tool from '@/views/ToolView.vue'
-import Post from '@/views/PostView.vue'
+import PostType from '@/views/PostView.vue'
 import Introduce from '@/views/IntroduceView.vue'
 import PostList from '@/views/PostList.vue'
+import Post from '@/views/Post.vue'
 
 const routes = [
   {
@@ -23,14 +24,19 @@ const routes = [
     component: Introduce
   },
   {
-    path: '/post',
-    name: 'Post',
-    component: Post
+    path: '/posttype',
+    name: 'PostType',
+    component: PostType
   },
   {
     path: '/post/list',
     name: 'PostList',
     component: PostList
+  },
+  {
+    path: '/post/',
+    name: 'Post',
+    component: Post
   },
   {
     path: '/:pathMatch(.*)*',

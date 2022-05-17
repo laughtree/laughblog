@@ -3,11 +3,10 @@
     <div id="sidediv">
         <div id="title"><p id="type">{{title[type]}}</p></div>
         <div id="intro"></div>
-        <div id="pic"><img :src="Leaf" id="leaf"></div>
     </div>
     <div id="background">
         <div id="list-frame">
-            <list-content postdate="2122/13/32" posttitle="oH YeAH"  imgsrc="https://media.nownews.com/nn_media/thumbnail/2017/04/b9a2f68efc4be7905e67fdc9c55ef2e6-1200x1348.jpg"></list-content>
+            <list-content postdate="2122/13/32" posttitle="oH YeAH"  imgsrc="https://media.nownews.com/nn_media/thumbnail/2017/04/b9a2f68efc4be7905e67fdc9c55ef2e6-1200x1348.jpg" ID="00001"></list-content>
             <list-content></list-content>
             <list-content></list-content>
             <list-content></list-content>
@@ -20,7 +19,6 @@
 </template>
 
 <script>
-import Leaf from "@/assets/leaf.svg"
 import ListContent from "@/components/PostListContent.vue"
 export default {
     components:{ListContent
@@ -31,7 +29,6 @@ export default {
     },
     data() {
         return{
-            Leaf,
             type:0,
             title: ["none","日常瞎扯淡","心得分享","胡搞瞎搞","其他"]
         }
@@ -65,9 +62,6 @@ export default {
 #pic{
     position: relative;
     flex: 2;
-}
-#leaf{
-    align-self: flex-end;
 }
 #outer{
     margin-top: 20px;

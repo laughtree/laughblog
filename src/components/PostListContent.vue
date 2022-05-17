@@ -1,8 +1,8 @@
 <template>
   <div id="outer">
-      <div id="pic"><a :href="postid"><img :src="imgpath" id="postimg"></a></div>
+      <div id="pic"><a :href="post"><img :src="imgpath" id="postimg"></a></div>
       <div id="text">
-          <div id="title"><a :href="postid">{{posttitle}}</a></div>
+          <div id="title"><a :href="post">{{posttitle}}</a></div>
           <div id="content">
               <div id="info">
                   <div id="datediv">{{postdate}}</div>
@@ -26,7 +26,7 @@ export default {
     data(){
         return{
             imgpath: nopic,
-            postid: "00000"
+            post: "00000"
         }
     },
     props: {
@@ -48,8 +48,8 @@ export default {
         }
     },
     created() {
-        this.imgpath = this.imgsrc
-        this
+        this.imgpath = this.imgsrc;
+        this.post = "./?postid=" + this.ID;
     }
 
 }

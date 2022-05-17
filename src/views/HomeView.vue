@@ -8,7 +8,7 @@
       <div class="menu-frame">
         <!-- Menu Buttons in a list -->
         <page-button page-name="網站介紹" page="introduce"></page-button>
-        <page-button page-name="文章列表" page="post"></page-button>
+        <page-button page-name="文章列表" page="posttype"></page-button>
         <page-button page-name="其他功能" page="tool"></page-button>
       </div>
     </div>
