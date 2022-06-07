@@ -7,7 +7,7 @@
     <div id="background">
         <div id="list-frame">
             <list-content postdate="2122/13/32" posttitle="oH YeAH"  imgsrc="https://media.nownews.com/nn_media/thumbnail/2017/04/b9a2f68efc4be7905e67fdc9c55ef2e6-1200x1348.jpg" ID="00001"></list-content>
-            <list-content></list-content>
+            <list-content postdate="1111/111/11"></list-content>
             <list-content></list-content>
             <list-content></list-content>
             <list-content></list-content>
