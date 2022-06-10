@@ -5,7 +5,7 @@
               <div id="title"><p>{{postTitle}}</p></div>
               <div id="time"><p>0000/00/00</p></div>
               <div id="summary"><p>{{postSummary}}</p></div>
-              <a :href="postLink"><div id="link"></div></a>
+              <a :href="Link"><div id="link"></div></a>
               <img :src="Info">
           </div>
       </div>
@@ -26,6 +26,7 @@ export default {
         return {
             Info,
             Content,
+            Link : "/post/?postid=" + this.postID
         }
     },
     props: {
@@ -37,16 +38,15 @@ export default {
             type: String,
             default: 'none'
         },
-        postLink:  {
+        postID:  {
             type: String,
-            default: '/unknownpost'
+            default: 'null'
         },
         contentText: {
             type: String,
             default: 'none'
         }
-    }
-
+    },
 }
 </script>
 

@@ -15,7 +15,7 @@
     <div class="post-previews">
       <div class="post-previews-frame">
         <!-- Post previews in a list -->
-        <post-preview postTitle="test" postSummary="哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈"></post-preview>
+        <post-preview postTitle="test" postSummary="哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈" postID="test"></post-preview>
         <post-preview></post-preview>
         <post-preview></post-preview>
       </div>
@@ -27,6 +27,7 @@
 import Title from "@/assets/title.svg";
 import PageButton from '@/components/PageButton.vue';
 import PostPreview from '@/components/PostPreview.vue';
+import axios from 'axios'
 export default {
   components: {PageButton,PostPreview},
   name: "HomeView",
@@ -35,6 +36,11 @@ export default {
       Title,
     };
   },
+  setup() {
+    axios.get('http://localhost:8081/').then((res)=>{
+      console.log(res.data)
+    })
+  }
 };
 </script>
 

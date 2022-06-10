@@ -20,12 +20,16 @@
 
 <script>
 import ListContent from "@/components/PostListContent.vue"
+import axios from 'axios'
 export default {
     components:{ListContent
 
     },
     created() {
         this.type = (new URLSearchParams(window.location.search)).get("type")
+        axios.get(`http://localhost:8081/post/list?type=${this.type}`).then((res)=>{
+            console.log(res.data)
+        })
     },
     data() {
         return{

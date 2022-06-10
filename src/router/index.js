@@ -6,6 +6,7 @@ import PostType from '@/views/PostView.vue'
 import Introduce from '@/views/IntroduceView.vue'
 import PostList from '@/views/PostList.vue'
 import Post from '@/views/Post.vue'
+import Edit from '@/views/EditView.vue'
 
 const routes = [
   {
@@ -39,10 +40,16 @@ const routes = [
     component: Post
   },
   {
+    path: '/edit/:pathMatch(.*)*',
+    name: 'Edit',
+    component: Edit
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'none',
     component: Nopage
   }
+  
 ]
 
 const router = createRouter({
