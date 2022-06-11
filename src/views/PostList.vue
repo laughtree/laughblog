@@ -34,6 +34,7 @@ export default {
     data() {
         return{
             type:0,
+            posttypes: {'none':0,'日常瞎扯淡(id:1)':1,'心得分享':2,'胡搞瞎搞':3,'其他':4},
             title: ["none","日常瞎扯淡","心得分享","胡搞瞎搞","其他"]
         }
     },

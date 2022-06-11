@@ -1,9 +1,9 @@
 <template>
-<div id="login" class="back" v-if="false">
+<div id="login" class="back" v-if="user!='owner'">
     <div id="frame">
         <div id="ipw">輸入密碼</div>
-        <div id="pwi"><input type="text"></div>
-        <div id="login-btn-frame"><button></button></div>
+        <div id="pwi"><input type="password" id="pw" v-model="pw"></div>
+        <div id="login-btn-frame" class="btn" @click="login()">登入<button id="login-btn"></button></div>
     </div>
 </div>
 
@@ -14,46 +14,59 @@
 <div id="write" class="back" v-if="!edit">
     <div id="up">
         <div id="title">
-            <input value="輸入標題" type="text" id="titleInput">
+            <input type="text" id="titleInput" v-model="postcontent.title">
         </div>
             <div id="tag">
             <div id="tags">
                 <div id="taglist-frame">
                     <ul id="taglist">
-                        <li v-for="tag in postTag" :key="tag.index" id="tagblock">{{tag}}</li>
+                        <li v-for="tag in postcontent.tags" :key="tag.index" id="tagblock">{{tag}}</li>
                     </ul>
                 </div>
-                <button id="addTag">+</button>
+                <div id="tagInput">
+                    <input type="text" id="newTag" v-model="newTag">
+                    <button id="addTag" @click="addTag()">+</button>
+                </div>
             </div>
     </div>
     </div>
     <div id="down">
         <div id="left">
             <div id="text">
-                <textarea id="textInput"></textarea>
+                <div v-if="displayMode" v-html="getMarkdown" id="markdown"></div>
+                <textarea id="textInput" v-model="postcontent.ctx" v-else></textarea>
                 <!-- <input value="輸入文章內容" type="text" id="textInput"> -->
             </div>
         </div>
         <div id="right">
             <div id="date-frame">
-                <div id="auto">自動<input type="checkbox" id="AS" checked></div>
-                <div id="select-date"><input type="date" id="date" disabled></div>
+                <div id="auto">自動<input type="checkbox" id="AS" v-model="auto"></div>
+                <div id="select-date"><input type="date" id="date" v-if="!auto"></div>
             </div>
             <div id="type-frame">
-                <select id="type">
-                    <option class="type-opt">日常瞎扯淡(id:1)</option>
+                <select id="type" v-model="postcontent.type">
+                    <option class="type-opt" >日常瞎扯淡(id:1)</option>
                     <option class="type-opt">心得分享(id:2)</option>
                     <option class="type-opt">胡搞瞎搞(id:3)</option>
                     <option class="type-opt">其他(id:4)</option>
                 </select>
             </div>
-            <div id="none"></div>
+            <div id="none">
+                <div id="mode-switch">
+                    <input v-model="postid" id="id-input">
+                    <button id="switch-btn" class="btn" @click="modeSwitch">進入編輯模式</button>
+                </div>
+                <div id="mkd">
+                    <button id="markdown-btn" class="btn" @click="displaySwitch();">切換預覽/編輯狀態</button>
+                </div>
+                <div id="block"></div>
+            </div>
             <div id="btn-area">
                 <div id="reset">
-                    <button id="reset-btn" class="btn">重置</button>
+                    <button id="reset-btn" class="btn" @click="reset">重置</button>
                 </div>
                 <div id="ok">
-                    <button id="ok-btn" class="btn">完成</button>
+                    <button id="ok-btn" class="btn" @click="writePost();">完成</button>
                 </div>
             </div>
         </div>
@@ -66,7 +79,7 @@
 <div id="edit" class="back" v-if="edit">
     <div id="up">
         <div id="title">
-            <input :value="postcontent.title" type="text" id="titleInput">
+            <input v-model="postcontent.title" type="text" id="titleInput">
         </div>
             <div id="tag">
             <div id="tags">
@@ -75,40 +88,51 @@
                         <li v-for="tag in postcontent.tags" :key="tag.index" id="tagblock">{{tag}}</li>
                     </ul>
                 </div>
-                <button id="addTag">+</button>
+                <div id="tagInput">
+                    <input type="text" id="newTag" v-model="newTag">
+                    <button id="addTag" @click="addTag()">+</button>
+                </div>
             </div>
     </div>
     </div>
     <div id="down">
         <div id="left">
             <div id="text">
-                <textarea id="textInput" v-model="postcontent.ctx"></textarea>
+                <div v-if="displayMode" v-html="getMarkdown" id="markdown"></div>
+                <textarea id="textInput" v-model="postcontent.ctx" v-else></textarea>
                 <!-- <input value="輸入文章內容" type="text" id="textInput"> -->
             </div>
         </div>
         <div id="right">
             <div id="date-frame">
-                <div id="auto">自動<input type="checkbox" id="AS" checked></div>
-                <div id="select-date"><input type="date" id="date" disabled></div>
+                <div id="sd">日期</div>
+                <div id="auto">自動<input type="checkbox" id="AS" v-model="auto"></div>
+                <div id="select-date"><input type="date" id="date" v-if="!auto"></div>
             </div>
             <div id="type-frame">
-                <select id="type">
-                    <option class="type-opt">日常瞎扯淡(id:1)</option>
-                    <option class="type-opt">心得分享(id:2)</option>
-                    <option class="type-opt">胡搞瞎搞(id:3)</option>
-                    <option class="type-opt">其他(id:4)</option>
+                <select id="type" v-model="postcontent.type">
+                    <option class="type-opt" id="type1" value="1" :selected="selectedtype==1">日常瞎扯淡(id:1)</option>
+                    <option class="type-opt" id="type2" value="2" :selected="selectedtype==2">心得分享(id:2)</option>
+                    <option class="type-opt" id="type3" value="3" :selected="selectedtype==3">胡搞瞎搞(id:3)</option>
+                    <option class="type-opt" id="type4" value="4" :selected="selectedtype==4">其他(id:4)</option>
                 </select>
             </div>
-            <div id="none"></div>
+            <div id="none">
+                <div id="mkd">
+                    <div class="box"></div>
+                    <button id="markdown-btn" class="btn" @click="displaySwitch();">切換預覽/編輯狀態</button>
+                    <div class="box"></div>
+                </div>
+            </div>
             <div id="btn-area">
                 <div id="delete">
                     <button id="delete-btn" class="btn">刪除</button>
                 </div>
                 <div id="cancel">
-                    <button id="cancel-btn" class="btn">取消</button>
+                    <button id="cancel-btn" class="btn" @click="edit = false; reset()">取消</button>
                 </div>
                 <div id="ok">
-                    <button id="ok-btn" class="btn">完成</button>
+                    <button id="ok-btn" class="btn" @click="editPost();modeSwitch();reset()">完成</button>
                 </div>
             </div>
         </div>
@@ -118,15 +142,20 @@
 </template>
 
 <script>
+import {marked} from 'marked'
 import axios from 'axios'
 export default {
     data() {
         return {
-            auto : document.getElementById("AS"),
-            postTag : ["aaa","bbb","ccc","ddd","eeeeee"],
+            auto : true,
+            newTag : '輸入標籤',
             edit : false,
-            postcontent: {},
-            postid: '00000'
+            postcontent: {'title':'標題','date':'','type':'0','ctx':'','tags':[]},
+            postid: '輸入欲編輯文章ID',
+            selectedtype: 3,
+            pw: '',
+            user:'',
+            displayMode: false,
         }
     },
     created() {
@@ -135,6 +164,9 @@ export default {
         if(mode === 'edit'){
             this.postid = new URLSearchParams(window.location.search).get("id")
             axios.get(`http://localhost:8081/edit/${this.postid}`).then((res)=>{
+                // console.log(this.postcontent.type) //測試用
+                // console.log(this.postcontent) //測試用
+                console.log(res.data) //測試用
                 this.postcontent.title = res.data[0]['Title']
                 this.postcontent.date = res.data[0]['PostDate']
                 this.postcontent.type = res.data[0]['PostType']
@@ -143,9 +175,70 @@ export default {
                 for(let i in res.data){
                     this.postcontent.tags[i] = res.data[i]['TagName']
                 }
-                console.log(this.postcontent) //測試用
-                console.log(res.data) //測試用
+                this.selectedtype = this.postcontent.type
             })
+        }
+    },
+    methods : {
+        addTag(){
+            console.log('add tag')
+            this.postcontent.tags.push(this.newTag)
+        },
+        reset(){
+            this.postcontent = {'title':'標題','date':'','type':'0','ctx':'','tags':[]}
+            this.newTag = '輸入標籤'
+            this.auto = true
+            this.postid = '輸入欲編輯文章ID'
+        },
+        modeSwitch(){
+            this.edit = !this.edit
+            if(this.edit){
+                axios.get(`http://localhost:8081/edit/${this.postid}`).then((res)=>{
+                this.postcontent.title = res.data[0]['Title']
+                this.postcontent.date = res.data[0]['PostDate']
+                this.postcontent.type = res.data[0]['PostType']
+                this.postcontent.ctx = res.data[0]['ContentText']
+                this.postcontent.tags = []
+                for(let i in res.data){
+                    this.postcontent.tags[i] = res.data[i]['TagName']
+                }
+                this.selectedtype = this.postcontent.type
+                })
+            }
+        },
+        writePost(){
+            axios.post('http://localhost:8081/writepost',{
+                postcontent: this.postcontent
+            }).then((res)=>{
+                alert(res.data['msg'])
+            })
+        },
+        editPost(){
+            axios.post('http://localhost:8081/editpost',{
+                postcontent: this.postcontent,
+                postid: this.postid
+            }).then((res)=>{
+                alert(res.data['msg'])
+            })
+        },
+        displaySwitch(){
+            // const endl = this.postcontent.ctx.replaceAll('\n','  \n')
+            // this.dispalyText =  marked(endl,{sanitize:true})
+            this.displayMode = !this.displayMode
+        },
+        login(){
+            axios.post('http://localhost:8081/login',{'password':this.pw}).then((res)=>{
+                this.user = res.data['user']
+                if(res.data['msg'] != undefined){
+                    alert(res.data['msg'])
+                }
+            })
+        }
+    },
+    computed: {
+        getMarkdown(){
+            const endl = this.postcontent.ctx.replaceAll('\n','  \n')
+            return marked(endl,{sanitize:true})
         }
     }
 }
@@ -159,6 +252,11 @@ export default {
     width: 100vw;
     height: 100vh;
     background-color: #E4E1DE;
+}
+#frame {
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
 }
 #up {
     flex: 1;
@@ -187,6 +285,9 @@ export default {
     margin: 10px;
     background-color: #E2DFD3;
     box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.15);
+}
+.box {
+    flex: 1;
 }
 #textInput {
     flex: 1;
@@ -238,6 +339,11 @@ export default {
     text-align: center;
     font-size: 36px;
 }
+#newTag {
+    height: 48px;
+    background-color: #c9c5b4;
+    box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.15) inset;
+}
 #auto {
     flex: 1;
     margin: 10px;
@@ -250,6 +356,9 @@ export default {
     background-color: #c9c5b4;
     box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.15) inset;
     align-content: center;
+}
+#sd {
+    margin: 10px;
 }
 #date {
     width: 99%;
@@ -276,13 +385,33 @@ export default {
     font-size: 36px;
     border: transparent;
 }
+#id-input {
+    flex: 1;
+    width: 41%;
+    height: 37px;
+    background-color: #c9c5b4;
+    box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.15) inset;
+}
 #none {
     flex: 13;
+    display: flex;
+    flex-direction: column-reverse;
+}
+#mode-switch {
+    flex: 1;
+    margin: 2%;
+    padding-top: 5px;
+}
+#block {
+    flex: 10;
 }
 #btn-area {
     flex: 2;
     display: flex;
     color: #fffce8;
+}
+#mkd {
+    display: flex;
 }
 #ok {
     flex: 3;
@@ -328,8 +457,26 @@ export default {
     color: #fffce8;
     font-size: 36px;
 }
+#switch-btn {
+    width: 55%;
+    flex: 1;
+    background-color: #8A756E;
+    border: #4e3f3b;
+    color: #fffce8;
+    font-size: 24px;
+    height: 90%;
+    margin-left: 3px;
+    transform: translate(0,5px);
+}
+#markdown-btn{
+    background-color: #8A756E;
+    border: #4e3f3b;
+    color: #fffce8;
+    font-size: 24px;
+    flex: 3;
+}
 .btn:hover {
-    transform: scale(1.1,1.1);
+    transform: scale(1.05,1.05);
 }
 #addTag {
     height: 100%;
@@ -341,8 +488,17 @@ export default {
     text-shadow: 2em,2em,1em,black;
     box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.15);
     color: #E4E1DE;
+    transform: translate(0,8px);
 }
 #addTag:hover {
-    transform: scale(1.1,1.1);
+    transform: scale(1.1,1.1) translate(0,8px);
 }
+
+div#markdown h1,h2,h3,h4 {
+    color: #232321;
+}
+div#markdown p {
+    color: #3E3C34;
+}
+
 </style>
