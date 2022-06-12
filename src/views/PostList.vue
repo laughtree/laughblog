@@ -6,12 +6,7 @@
     </div>
     <div id="background">
         <div id="list-frame">
-            <list-content postdate="2122/13/32" posttitle="oH YeAH"  imgsrc="https://media.nownews.com/nn_media/thumbnail/2017/04/b9a2f68efc4be7905e67fdc9c55ef2e6-1200x1348.jpg" ID="00001"></list-content>
-            <list-content postdate="1111/111/11"></list-content>
-            <list-content></list-content>
-            <list-content></list-content>
-            <list-content></list-content>
-            <list-content></list-content>
+            <list-content v-for="pt in post" :key="pt.index" :postdate="pt.PostDate" :posttitle="pt.Title" :ID="pt.id" :ctx="pt.ContentText"></list-content>
         </div>
     </div>
 </div>
@@ -28,17 +23,18 @@ export default {
     created() {
         this.type = (new URLSearchParams(window.location.search)).get("type")
         axios.get(`http://localhost:8081/post/list?type=${this.type}`).then((res)=>{
-            console.log(res.data)
+            console.log(res.data) //測試用
+            this.post = res.data
         })
     },
     data() {
         return{
             type:0,
             posttypes: {'none':0,'日常瞎扯淡(id:1)':1,'心得分享':2,'胡搞瞎搞':3,'其他':4},
-            title: ["none","日常瞎扯淡","心得分享","胡搞瞎搞","其他"]
+            title: ["none","日常瞎扯淡","心得分享","胡搞瞎搞","其他"],
+            post:[]
         }
     },
-
 }
 </script>
 

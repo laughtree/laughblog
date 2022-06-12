@@ -1,12 +1,17 @@
 <template>
   <div id="frame">
-      aaaa
+      {{tag}}
   </div>
 </template>
 
 <script>
 export default {
-
+  props: {
+    tag: {
+      type: String,
+      default: ''
+    }
+  }
 }
 </script>
 

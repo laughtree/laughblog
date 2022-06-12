@@ -15,9 +15,7 @@
     <div class="post-previews">
       <div class="post-previews-frame">
         <!-- Post previews in a list -->
-        <post-preview postTitle="test" postSummary="哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈" postID="test"></post-preview>
-        <post-preview></post-preview>
-        <post-preview></post-preview>
+        <post-preview v-for="pt in post" :key="pt.index" :postTitle="pt.Title" :postSum="pt.PostType" :postID="pt.id" :postDate="pt.PostDate" :contentText="pt.ContentText"></post-preview>
       </div>
     </div>
   </div>
@@ -34,11 +32,16 @@ export default {
   data() {
     return {
       Title,
+      post:[],
     };
   },
   setup() {
+    
+  },
+  created(){
     axios.get('http://localhost:8081/').then((res)=>{
-      console.log(res.data)
+      console.log(res.data) //測試用
+      this.post = res.data
     })
   }
 };
@@ -60,6 +63,26 @@ body {
 ::-webkit-scrollbar-thumb{
   background-color: rgba(121, 85, 72, 0.3);
   box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.05);
+}
+div.markdown h1,h2,h3,h4 {
+    color: #232321;
+}
+div.markdown {
+    color: #3E3C34;
+    font-size: 24px;
+    max-height: 695px;
+    overflow: auto;
+}
+div.markdown pre {
+    border-color: rgba(78, 63, 59, 0.3);
+    border-style: solid;
+    border-width: 2px;
+    display: inline-block;
+}
+div.markdown code {
+  border-color: rgba(78, 63, 59, 0.3);
+    border-style: solid;
+    border-width: 2px;
 }
 </style>
 

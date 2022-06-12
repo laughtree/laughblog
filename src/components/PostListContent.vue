@@ -7,10 +7,12 @@
               <div id="info">
                   <div id="datediv">{{postdate}}</div>
                   <div id="tagdiv">
-                      <div id="textframe"><post-tag></post-tag></div>
+                      <div id="textframe">
+                        <post-tag v-for="tag in tags" :key="tag.index" :tag="tag"></post-tag>
+                        </div>
                   </div>
               </div>
-              <div id="sum"></div>
+              <div id="sum" v-html="markdown" class="markdown"></div>
           </div>
       </div>
   </div>
@@ -19,6 +21,9 @@
 <script>
 import nopic from "@/assets/nopic.png"
 import PostTag from "@/components/PostTag.vue"
+import axios from 'axios'
+import {marked} from 'marked'
+import * as sanitizehtml from 'sanitize-html'
 export default {
     components: {
         PostTag
@@ -26,7 +31,8 @@ export default {
     data(){
         return{
             imgpath: nopic,
-            post: "00000"
+            post: "00000",
+            tags: []
         }
     },
     props: {
@@ -45,11 +51,30 @@ export default {
         ID: {
             type: String,
             default: "00000"
+        },
+        ctx:{
+            type: String,
+            default: ""
         }
     },
     created() {
         this.imgpath = this.imgsrc;
         this.post = "./?postid=" + this.ID;
+        axios.post('http://localhost:8081/getTag',{id:this.ID}).then((res)=>{
+            console.log(res.data)
+            for(let i in res.data){
+                this.tags[i] = res.data[i]['TagName']
+                console.log(this.tags[i])
+            }
+        })
+    },
+    computed: {
+        markdown(){
+            const endl = this.ctx.replaceAll('\n','  \n')
+            return sanitizehtml(marked(endl),{
+                allowedTags: sanitizehtml.defaults.allowedTags.concat([ 'img' , 'del' ]),
+            })
+        }
     }
 
 }
@@ -79,6 +104,7 @@ export default {
 #content{
     flex: 3;
     display: flex;
+    overflow: hidden;
 }
 #postimg{
     width: 160px;
@@ -93,6 +119,13 @@ export default {
 }
 #sum{
     flex: 4;
+    overflow: hidden;
+    max-width: 445;
+    max-height: 120;
+}
+#sum p {
+    max-height: 120;
+    overflow: hidden;
 }
 #datediv{
     flex: 1;
@@ -100,12 +133,15 @@ export default {
 }
 #tagdiv{
     flex: 3;
+    overflow: hidden;
 }
 #textframe{
     height: 100%;
+    max-height: 82.5px;
     padding-top: -3px;
     background-color: rgba(121, 85, 72, 0.3);
     padding: 5px 5px 5px 5px;
+    overflow-y: auto;
 }
 a{
     text-decoration: none;

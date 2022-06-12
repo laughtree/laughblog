@@ -3,15 +3,15 @@
       <div id="info">
           <div class="inside">
               <div id="title"><p>{{postTitle}}</p></div>
-              <div id="time"><p>0000/00/00</p></div>
-              <div id="summary"><p>{{postSummary}}</p></div>
+              <div id="time"><p>{{postDate}}</p></div>
+              <div id="summary"><p>{{types[postSum]}}</p></div>
               <a :href="Link"><div id="link"></div></a>
               <img :src="Info">
           </div>
       </div>
       <div id="content">
           <div class="inside">
-              <p id=text>{{contentText}}</p>
+              <p id=text v-html="markdown" class="markdown"></p>
               <img :src="Content">
           </div>
       </div>
@@ -21,12 +21,15 @@
 <script>
 import Info from "@/assets/preview-info.svg"
 import Content from "@/assets/preview-content.svg"
+import {marked} from 'marked'
+import * as sanitizehtml from 'sanitize-html'
 export default {
     data() {
         return {
             Info,
             Content,
-            Link : "/post/?postid=" + this.postID
+            Link : "/post/?postid=" + this.postID,
+            types: ["none","日常瞎扯淡","心得分享","胡搞瞎搞","其他"],
         }
     },
     props: {
@@ -34,7 +37,7 @@ export default {
             type: String,
             default: '無題',
         },
-        postSummary: {
+        postSum: {
             type: String,
             default: 'none'
         },
@@ -45,8 +48,20 @@ export default {
         contentText: {
             type: String,
             default: 'none'
+        },
+        postDate: {
+            type: String,
+            default: '0000/00/00'
         }
     },
+    computed: {
+        markdown(){
+            const endl = this.contentText.replaceAll('\n','  \n')
+            return sanitizehtml(marked(endl),{
+                allowedTags: sanitizehtml.defaults.allowedTags.concat([ 'img' , 'del' ]),
+            })
+        }
+    }
 }
 </script>
 
@@ -103,6 +118,8 @@ export default {
     top: 40px;
     font-size: 20px;
     color: #3F251C;
+    max-height: 170px;
+    overflow: hidden;
 }
 #link{
     position: absolute;

@@ -33,7 +33,7 @@
     <div id="down">
         <div id="left">
             <div id="text">
-                <div v-if="displayMode" v-html="getMarkdown" id="markdown"></div>
+                <div v-if="displayMode" v-html="getMarkdown" class="markdown"></div>
                 <textarea id="textInput" v-model="postcontent.ctx" v-else></textarea>
                 <!-- <input value="輸入文章內容" type="text" id="textInput"> -->
             </div>
@@ -45,10 +45,10 @@
             </div>
             <div id="type-frame">
                 <select id="type" v-model="postcontent.type">
-                    <option class="type-opt" >日常瞎扯淡(id:1)</option>
-                    <option class="type-opt">心得分享(id:2)</option>
-                    <option class="type-opt">胡搞瞎搞(id:3)</option>
-                    <option class="type-opt">其他(id:4)</option>
+                    <option class="type-opt" value="1">日常瞎扯淡(id:1)</option>
+                    <option class="type-opt" value="2">心得分享(id:2)</option>
+                    <option class="type-opt" value="3">胡搞瞎搞(id:3)</option>
+                    <option class="type-opt" value="4">其他(id:4)</option>
                 </select>
             </div>
             <div id="none">
@@ -57,7 +57,7 @@
                     <button id="switch-btn" class="btn" @click="modeSwitch">進入編輯模式</button>
                 </div>
                 <div id="mkd">
-                    <button id="markdown-btn" class="btn" @click="displaySwitch();">切換預覽/編輯狀態</button>
+                    <button id="markdown-btn" class="btn" @click="displaySwitch();">切換預覽/編輯</button>
                 </div>
                 <div id="block"></div>
             </div>
@@ -98,7 +98,7 @@
     <div id="down">
         <div id="left">
             <div id="text">
-                <div v-if="displayMode" v-html="getMarkdown" id="markdown"></div>
+                <div v-if="displayMode" v-html="getMarkdown" class="markdown"></div>
                 <textarea id="textInput" v-model="postcontent.ctx" v-else></textarea>
                 <!-- <input value="輸入文章內容" type="text" id="textInput"> -->
             </div>
@@ -120,7 +120,7 @@
             <div id="none">
                 <div id="mkd">
                     <div class="box"></div>
-                    <button id="markdown-btn" class="btn" @click="displaySwitch();">切換預覽/編輯狀態</button>
+                    <button id="markdown-btn" class="btn" @click="displaySwitch();">切換預覽/編輯</button>
                     <div class="box"></div>
                 </div>
             </div>
@@ -144,6 +144,7 @@
 <script>
 import {marked} from 'marked'
 import axios from 'axios'
+import * as sanitizehtml from 'sanitize-html'
 export default {
     data() {
         return {
@@ -238,7 +239,9 @@ export default {
     computed: {
         getMarkdown(){
             const endl = this.postcontent.ctx.replaceAll('\n','  \n')
-            return marked(endl,{sanitize:true})
+            return sanitizehtml(marked(endl),{
+                allowedTags: sanitizehtml.defaults.allowedTags.concat([ 'img' , 'del' ]),
+            })
         }
     }
 }
@@ -343,6 +346,7 @@ export default {
     height: 48px;
     background-color: #c9c5b4;
     box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.15) inset;
+    font-size: 24px;
 }
 #auto {
     flex: 1;
@@ -488,17 +492,10 @@ export default {
     text-shadow: 2em,2em,1em,black;
     box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.15);
     color: #E4E1DE;
-    transform: translate(0,8px);
+    transform: translate(0,4px);
 }
 #addTag:hover {
-    transform: scale(1.1,1.1) translate(0,8px);
-}
-
-div#markdown h1,h2,h3,h4 {
-    color: #232321;
-}
-div#markdown p {
-    color: #3E3C34;
+    transform: scale(1.1,1.1) translate(0,4px);
 }
 
 </style>
